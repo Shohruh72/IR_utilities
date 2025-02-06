@@ -31,9 +31,13 @@ def verify_name_pairs(image_path, label_path):
     images = os.listdir(image_path)
     labels = os.listdir(label_path)
 
+    # Supported image formats
+    image_extensions = ('.png', '.jpg', '.jpeg', '.bmp', '.tiff')
+
     # Extract filenames without extensions and filter based on desired extensions
-    image_names = [os.path.splitext(im)[0] for im in images if im.endswith(('.png'))]
-    label_names = [os.path.splitext(lab)[0] for lab in labels if lab.endswith('.pts')]
+    image_names = [os.path.splitext(im)[0] for im in images if im.endswith(image_extensions)]
+    label_names = [os.path.splitext(lab)[0] for lab in labels if
+                   lab.endswith('.txt')]
 
     # Find unmatched image and label names
     diff_img_label = list((Counter(image_names) - Counter(label_names)).elements())
@@ -41,8 +45,8 @@ def verify_name_pairs(image_path, label_path):
 
     # Report any mismatches
     if diff_img_label or diff_label_img or len(images) != len(labels):
-        print("error comes from images folder:", diff_img_label)
-        print("error comes from label folder:", diff_label_img)
+        print("Error comes from images folder:", diff_img_label)
+        print("Error comes from label folder:", diff_label_img)
         print('Please check folders.')
     else:
         print('OK...')
